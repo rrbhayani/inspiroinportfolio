@@ -1,0 +1,165 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   DESIGN TOKENS — light-first (matched to inspiroin.com)
+   ============================================================ */
+:root {
+  --bg: #f9fbff; /* page background — soft blue-white */
+  --surface: #ffffff; /* cards */
+  --surface-2: #f1f5fb; /* raised cards / inputs */
+  --border: #e2e8f0;
+  --border-strong: #d6ddf2;
+  --text: #0e1321; /* body */
+  --heading: #0e204a; /* deep navy headings */
+  --text-muted: #828d9d;
+  --accent: #4868d1; /* royal periwinkle */
+  --accent-strong: #1a2e5a;
+  --accent-2: #7aa7f0; /* soft sky — gradients/glows only */
+
+  /* Pastel section tints */
+  --tint-pink: #fef0f2;
+  --tint-lavender: #f1ebfd;
+  --tint-mint: #ebfaf8;
+  --tint-sky: #ebf8fe;
+
+  --ease-signature: cubic-bezier(0.22, 1, 0.36, 1);
+  --gutter: clamp(1.25rem, 5vw, 3rem);
+}
+
+/* Optional dark variant — same tokens inverted. Toggle [data-theme="dark"]. */
+[data-theme="dark"] {
+  --bg: #0a0a0c;
+  --surface: #131318;
+  --surface-2: #1c1c24;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --text: #f4f4f6;
+  --heading: #f4f4f6;
+  --text-muted: #9a9aa8;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+    /* Base canvas — the #bg-layer (transparent by default) shifts color over this. */
+    background-color: var(--bg);
+  }
+
+  /* Lenis */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  body {
+    /* Transparent so the fixed #bg-layer behind it can show its shifting color. */
+    background-color: transparent;
+    color: var(--text);
+    font-family: var(--font-inter), system-ui, sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5 {
+    font-family: var(--font-space-grotesk), system-ui, sans-serif;
+    color: var(--heading);
+    letter-spacing: -0.02em;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--accent) 22%, transparent);
+    color: var(--heading);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+@layer components {
+  .container-px {
+    padding-left: var(--gutter);
+    padding-right: var(--gutter);
+  }
+
+  .eyebrow {
+    font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--accent);
+  }
+
+  .hairline {
+    border: 1px solid var(--border);
+  }
+
+  /* Signature gradient mesh — soft, never garish. */
+  .mesh-gradient {
+    background:
+      radial-gradient(40% 50% at 25% 30%, color-mix(in srgb, var(--accent) 40%, transparent), transparent 70%),
+      radial-gradient(45% 55% at 75% 35%, color-mix(in srgb, var(--accent-2) 50%, transparent), transparent 70%),
+      radial-gradient(50% 50% at 50% 80%, var(--tint-lavender), transparent 75%);
+    filter: blur(70px);
+  }
+
+  .text-gradient {
+    background: linear-gradient(110deg, var(--heading) 35%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+/* ============================================================
+   FILM GRAIN (very subtle; off by default — add .grain to <body>)
+   ============================================================ */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ============================================================
+   REDUCED MOTION — NON-NEGOTIABLE
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .mesh-gradient {
+    animation: none !important;
+  }
+}
