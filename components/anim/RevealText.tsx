@@ -17,6 +17,16 @@ type Props = {
   delay?: number;
 };
 
+const MOTION_TAGS = ["div", "h1", "h2", "h3", "h4", "p", "span", "section"] as const;
+type MotionTag = (typeof MOTION_TAGS)[number];
+
+function resolveMotionTag(as?: ElementType) {
+  if (typeof as === "string" && (MOTION_TAGS as readonly string[]).includes(as)) {
+    return motion[as as MotionTag];
+  }
+  return motion.div;
+}
+
 const container = (stagger: number, delay: number): Variants => ({
   hidden: {},
   visible: { transition: { staggerChildren: stagger, delayChildren: delay } },
@@ -47,7 +57,7 @@ export function RevealText({
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref as RefObject<Element>, VIEWPORT);
   const [nearOnLoad, setNearOnLoad] = useState(false);
-  const Tag = motion(as ?? "div");
+  const Tag = resolveMotionTag(as);
 
   const units: string[] =
     mode === "lines" ? lines ?? [text] : mode === "words" ? text.split(" ") : Array.from(text);
@@ -84,16 +94,15 @@ export function RevealText({
         const isLast = i === units.length - 1;
         const display = mode === "lines" ? "block" : "inline-block";
         return (
-          <span
+          <motion.span
             key={i}
+            variants={unit}
             className={`${display} overflow-hidden ${mode !== "chars" ? "pb-[0.08em]" : ""} ${highlightLast && isLast ? "text-gradient" : ""}`}
           >
-            <motion.span variants={unit}>
-              {u}
-              {mode === "words" && i < units.length - 1 ? " " : ""}
-              {mode === "chars" && u === " " ? " " : ""}
-            </motion.span>
-          </span>
+            {u}
+            {mode === "words" && i < units.length - 1 ? " " : ""}
+            {mode === "chars" && u === " " ? " " : ""}
+          </motion.span>
         );
       })}
     </Tag>
