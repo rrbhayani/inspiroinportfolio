@@ -1,19 +1,17 @@
 "use client";
 
-import { motion, useReducedMotion, type Variants } from "framer-motion";
-import type { ElementType } from "react";
+import { motion, useReducedMotion, useInView, type Variants } from "framer-motion";
+import { useRef, useEffect, useState, type ElementType, type RefObject } from "react";
 import { EASE } from "@/lib/motion";
 
 type Mode = "lines" | "words" | "chars";
 
 type Props = {
-  /** Plain text for words/chars. For "lines", pass `lines` instead. */
   text?: string;
   lines?: string[];
   mode?: Mode;
   as?: ElementType;
   className?: string;
-  /** Render the last unit (line/word) with the accent text-gradient. */
   highlightLast?: boolean;
   stagger?: number;
   delay?: number;
@@ -28,6 +26,8 @@ const unit: Variants = {
   hidden: { y: "110%" },
   visible: { y: "0%", transition: { duration: 0.8, ease: EASE } },
 };
+
+const VIEWPORT = { once: true, amount: 0, margin: "0px 0px 200px 0px" } as const;
 
 /**
  * Mask line/word/char reveal: each unit slides up from behind an invisible clip
@@ -44,33 +44,51 @@ export function RevealText({
   delay = 0,
 }: Props) {
   const reduce = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref as RefObject<Element>, VIEWPORT);
+  const [nearOnLoad, setNearOnLoad] = useState(false);
   const Tag = motion(as ?? "div");
 
   const units: string[] =
     mode === "lines" ? lines ?? [text] : mode === "words" ? text.split(" ") : Array.from(text);
+
+  useEffect(() => {
+    if (reduce) return;
+    const el = ref.current;
+    if (!el) return;
+    const check = () => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight + 200) setNearOnLoad(true);
+    };
+    check();
+    const id = window.setTimeout(check, 80);
+    return () => window.clearTimeout(id);
+  }, [reduce]);
 
   if (reduce) {
     const Plain = (as ?? "div") as ElementType;
     return <Plain className={className}>{lines ? lines.join(" ") : text}</Plain>;
   }
 
+  const show = inView || nearOnLoad;
+
   return (
     <Tag
+      ref={ref}
       className={className}
       variants={container(stagger, delay)}
       initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.5 }}
+      animate={show ? "visible" : "hidden"}
     >
       {units.map((u, i) => {
         const isLast = i === units.length - 1;
         const display = mode === "lines" ? "block" : "inline-block";
         return (
-          <span key={i} className={`${display} overflow-hidden ${mode !== "chars" ? "pb-[0.08em]" : ""}`}>
-            <motion.span
-              variants={unit}
-              className={`inline-block ${highlightLast && isLast ? "text-gradient" : ""}`}
-            >
+          <span
+            key={i}
+            className={`${display} overflow-hidden ${mode !== "chars" ? "pb-[0.08em]" : ""} ${highlightLast && isLast ? "text-gradient" : ""}`}
+          >
+            <motion.span variants={unit}>
               {u}
               {mode === "words" && i < units.length - 1 ? " " : ""}
               {mode === "chars" && u === " " ? " " : ""}

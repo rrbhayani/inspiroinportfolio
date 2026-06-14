@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import { useInView, useReducedMotion, animate } from "framer-motion";
 
 /**
@@ -17,7 +17,7 @@ export function StatCounter({
   label: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.5 });
+  const inView = useInView(ref as RefObject<Element>, { once: true, amount: 0.5 });
   const reduce = useReducedMotion();
   const [display, setDisplay] = useState(0);
 

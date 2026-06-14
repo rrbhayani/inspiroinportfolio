@@ -8,16 +8,16 @@ export const baseTransition: Transition = {
   ease: EASE,
 };
 
-// Fade + slide up (y: 40 -> 0). Used by Reveal and section headers.
+// Fade + slide up with subtle scale. Used by Reveal and section headers.
 export const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: baseTransition },
+  hidden: { opacity: 0, y: 36, scale: 0.98 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: baseTransition },
 };
 
 // Same with a soft focus-in blur.
 export const fadeUpBlur: Variants = {
-  hidden: { opacity: 0, y: 40, filter: "blur(8px)" },
-  visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: baseTransition },
+  hidden: { opacity: 0, y: 36, scale: 0.98, filter: "blur(8px)" },
+  visible: { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", transition: baseTransition },
 };
 
 // Container that staggers its children by ~0.1s.

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "./Button";
 import { EASE } from "@/lib/motion";
@@ -8,7 +9,20 @@ import { EASE } from "@/lib/motion";
 type Errors = Partial<Record<"name" | "email" | "message", string>>;
 type Status = "idle" | "submitting" | "success" | "error";
 
-const budgets = ["< $10k", "$10k–$25k", "$25k–$50k", "$50k–$100k", "$100k+"];
+const budgets = [
+  "Under ₹8L / < $10k",
+  "₹8L–20L / $10k–$25k",
+  "₹20L–40L / $25k–$50k",
+  "₹40L–80L / $50k–$100k",
+  "₹80L+ / $100k+",
+];
+const projectTypes = [
+  "Shopify store",
+  "Custom website / admin panel",
+  "Both Shopify & custom web",
+  "Store management / support",
+  "Not sure yet",
+];
 
 export function ContactForm() {
   const [errors, setErrors] = useState<Errors>({});
@@ -38,26 +52,21 @@ export function ContactForm() {
 
     setStatus("submitting");
     try {
-      // ────────────────────────────────────────────────────────────
-      // CONNECT YOUR BACKEND HERE.
-      //
-      // Formspree:
-      //   await fetch("https://formspree.io/f/<your-id>", {
-      //     method: "POST",
-      //     headers: { Accept: "application/json" },
-      //     body: data,
-      //   });
-      //
-      // Resend (via a route handler at app/api/contact/route.ts):
-      //   await fetch("/api/contact", {
-      //     method: "POST",
-      //     headers: { "Content-Type": "application/json" },
-      //     body: JSON.stringify(Object.fromEntries(data)),
-      //   });
-      // ────────────────────────────────────────────────────────────
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: String(data.get("name") || "").trim(),
+          email: String(data.get("email") || "").trim(),
+          company: String(data.get("company") || "").trim(),
+          projectType: String(data.get("projectType") || "").trim(),
+          budget: String(data.get("budget") || "").trim(),
+          message: String(data.get("message") || "").trim(),
+        }),
+      });
 
-      // Simulated success so the UI works out of the box. Remove when wired.
-      await new Promise((r) => setTimeout(r, 900));
+      if (!res.ok) throw new Error("Send failed");
+
       setStatus("success");
       form.reset();
     } catch {
@@ -131,6 +140,22 @@ export function ContactForm() {
         </Field>
       </div>
 
+      <Field label="Project type" name="projectType" optional>
+        <div className="relative">
+          <select id="projectType" name="projectType" className={`${inputClass(false)} appearance-none pr-10`} defaultValue="">
+            <option value="" disabled>
+              What are you looking for?
+            </option>
+            {projectTypes.map((t) => (
+              <option key={t} value={t}>
+                {t}
+              </option>
+            ))}
+          </select>
+          <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-text-muted">▾</span>
+        </div>
+      </Field>
+
       <Field label="Budget" name="budget" optional>
         <div className="relative">
           <select id="budget" name="budget" className={`${inputClass(false)} appearance-none pr-10`} defaultValue="">
@@ -152,29 +177,38 @@ export function ContactForm() {
           id="message"
           name="message"
           rows={5}
-          placeholder="What are you building, and what's the goal?"
+          placeholder="Shopify store, custom website with admin, or both — what's the goal?"
           aria-invalid={!!errors.message}
           className={`${inputClass(!!errors.message)} resize-none`}
         />
       </Field>
 
-      <div className="flex items-center gap-4">
-        <Button type="submit" magnetic withArrow>
-          {status === "submitting" ? "Sending…" : "Send message"}
-        </Button>
-        <AnimatePresence>
-          {status === "error" && (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="text-sm text-red-400"
-              role="alert"
-            >
-              Something went wrong. Please try again.
-            </motion.p>
-          )}
-        </AnimatePresence>
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center gap-4">
+          <Button type="submit" magnetic withArrow disabled={status === "submitting"}>
+            {status === "submitting" ? "Sending…" : "Send message"}
+          </Button>
+          <AnimatePresence>
+            {status === "error" && (
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="text-sm text-red-400"
+                role="alert"
+              >
+                Something went wrong. Please try again.
+              </motion.p>
+            )}
+          </AnimatePresence>
+        </div>
+        <p className="text-xs text-text-muted">
+          By submitting, you agree to our{" "}
+          <Link href="/privacy" className="text-accent hover:underline">
+            Privacy Policy
+          </Link>
+          . We reply within one business day.
+        </p>
       </div>
     </form>
   );

@@ -4,9 +4,9 @@ import { Icon } from "@/components/Icon";
 import { tools } from "@/lib/site";
 
 const assurances = [
-  "Security-first by design",
-  "Built for performance",
-  "Scales with your growth",
+  "Shopify & custom web",
+  "Admin panels built in",
+  "Supported after launch",
 ];
 
 export function ToolsSection() {

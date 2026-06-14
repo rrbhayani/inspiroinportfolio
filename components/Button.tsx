@@ -5,7 +5,7 @@ import { motion, useMotionValue, useSpring, useReducedMotion } from "framer-moti
 import { useRef, type ReactNode, type MouseEvent } from "react";
 import { Icon } from "./Icon";
 
-type Variant = "primary" | "ghost";
+type Variant = "primary" | "secondary" | "ghost";
 
 type Props = {
   children: ReactNode;
@@ -15,8 +15,11 @@ type Props = {
   /** Adds a magnetic pull on hover — best on primary CTAs. */
   magnetic?: boolean;
   withArrow?: boolean;
+  /** Open href in a new tab (for external live site links). */
+  external?: boolean;
   className?: string;
   type?: "button" | "submit";
+  disabled?: boolean;
   ariaLabel?: string;
 };
 
@@ -26,6 +29,8 @@ const base =
 const variants: Record<Variant, string> = {
   primary:
     "bg-accent text-white shadow-soft hover:-translate-y-1 hover:shadow-glow",
+  secondary:
+    "border border-border-strong bg-surface text-heading hover:-translate-y-1 hover:border-accent/40 hover:bg-accent/5",
   ghost:
     "border border-border-strong bg-surface text-heading hover:-translate-y-1 hover:border-accent/40 hover:bg-accent/5",
 };
@@ -37,8 +42,10 @@ export function Button({
   variant = "primary",
   magnetic = false,
   withArrow = false,
+  external = false,
   className = "",
   type = "button",
+  disabled = false,
   ariaLabel,
 }: Props) {
   const reduce = useReducedMotion();
@@ -74,17 +81,28 @@ export function Button({
     </>
   );
 
-  const classes = `${base} ${variants[variant]} ${className}`;
+  const classes = `${base} ${variants[variant]} ${disabled ? "pointer-events-none opacity-60" : ""} ${className}`;
 
-  const content = href ? (
-    <Link href={href} className={classes} aria-label={ariaLabel}>
-      {inner}
-    </Link>
-  ) : (
-    <button type={type} onClick={onClick} className={classes} aria-label={ariaLabel}>
-      {inner}
-    </button>
-  );
+  const content =
+    href && external ? (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={classes}
+        aria-label={ariaLabel}
+      >
+        {inner}
+      </a>
+    ) : href ? (
+      <Link href={href} className={classes} aria-label={ariaLabel}>
+        {inner}
+      </Link>
+    ) : (
+      <button type={type} onClick={onClick} disabled={disabled} className={classes} aria-label={ariaLabel}>
+        {inner}
+      </button>
+    );
 
   return (
     <motion.div

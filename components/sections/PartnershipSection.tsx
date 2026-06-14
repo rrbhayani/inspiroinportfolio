@@ -10,12 +10,12 @@ export function PartnershipSection() {
       <div className="mx-auto max-w-content px-[var(--gutter)]">
         <div className="flex max-w-2xl flex-col gap-4">
           <Reveal>
-            <span className="eyebrow">A Partner, Not Just a Technology Provider</span>
+            <span className="eyebrow">Your Shopify &amp; Web Partner</span>
           </Reveal>
           <RevealText
             as="h2"
             mode="words"
-            text="Results that speak, proven at scale"
+            text="Real work you can visit live"
             stagger={0.08}
             className="text-h2 font-extrabold"
           />

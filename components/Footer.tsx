@@ -5,10 +5,15 @@ import { site } from "@/lib/site";
 import { services } from "@/lib/services";
 
 const companyLinks = [
-  { label: "Products", href: "/products" },
+  { label: "Projects", href: "/work" },
+  { label: "About", href: "/about" },
   { label: "Solutions", href: "/solutions" },
-  { label: "Careers", href: "/careers" },
   { label: "Get In Touch", href: "/contact" },
+];
+
+const legalLinks = [
+  { label: "Privacy Policy", href: "/privacy" },
+  { label: "Terms of Use", href: "/terms" },
 ];
 
 const socials: { name: IconName; href: string; label: string }[] = [
@@ -27,8 +32,8 @@ export function Footer() {
           <div className="col-span-2 flex flex-col gap-5 md:col-span-4">
             <Logo />
             <p className="max-w-xs text-sm leading-relaxed text-text-muted">
-              Empowering organizations through thoughtful technology, talent, and learning
-              solutions.
+              Shopify stores and custom websites with admin panels — built, managed, and supported
+              end to end.
             </p>
             <div className="flex gap-2">
               {socials.map((s) => (
@@ -90,18 +95,28 @@ export function Footer() {
                 </a>
               </li>
               <li>{site.hours}</li>
-              <li>{site.location}</li>
+              <li>{site.address}</li>
             </ul>
           </div>
         </div>
 
-        <div className="mt-14 flex flex-col items-start justify-between gap-3 border-t border-border pt-6 text-xs text-text-muted md:flex-row md:items-center">
-          <p>
-            © {year} {site.legalName}. All rights reserved.
-          </p>
-          <p className="font-mono uppercase tracking-widest">
-            Skills · Talent · Technology
-          </p>
+        <div className="mt-14 flex flex-col items-start justify-between gap-4 border-t border-border pt-6 text-xs text-text-muted md:flex-row md:items-center">
+          <div className="flex flex-col gap-2">
+            <p>
+              © {year} {site.legalName}. All rights reserved.
+            </p>
+            <p>{site.address}</p>
+          </div>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+            {legalLinks.map((l) => (
+              <Link key={l.href} href={l.href} className="transition-colors hover:text-heading">
+                {l.label}
+              </Link>
+            ))}
+            <p className="font-mono uppercase tracking-widest">
+              Shopify · Custom Web · Support
+            </p>
+          </div>
         </div>
       </div>
     </footer>

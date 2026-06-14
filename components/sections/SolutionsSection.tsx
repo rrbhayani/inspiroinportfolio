@@ -11,7 +11,7 @@ export function SolutionsSection() {
         <SectionHeading
           eyebrow="Our Solutions"
           title="Solutions designed around real workflows"
-          subtitle="Our technology solutions are designed to support how teams learn, collaborate, and perform — without adding unnecessary complexity."
+          subtitle="Two core strengths — Shopify commerce and fully custom websites with admin panels. Pick one or combine both."
           className="mb-14"
         />
 

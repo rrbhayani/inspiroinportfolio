@@ -1,36 +1,68 @@
 "use client";
 
-import { motion, type Variants } from "framer-motion";
-import type { ReactNode } from "react";
+import { motion, useReducedMotion, useInView, type Variants } from "framer-motion";
+import { useRef, useEffect, useState, type ReactNode, type RefObject } from "react";
 import { fadeUp, fadeUpBlur, staggerContainer, staggerItem } from "@/lib/motion";
+
+/** Generous zone so content just below the fold reveals on page load, not only after scroll. */
+const VIEWPORT = { once: true, amount: 0, margin: "0px 0px 300px 0px" } as const;
 
 type Props = {
   children: ReactNode;
   className?: string;
-  /** Stagger direct children (each child must be wrapped in <RevealItem> or motion). */
   stagger?: boolean;
-  /** Soft focus-in blur on reveal. */
   blur?: boolean;
   delay?: number;
   as?: "div" | "section" | "ul" | "li" | "header";
 };
 
+function isNearViewport(el: HTMLElement) {
+  const rect = el.getBoundingClientRect();
+  return rect.top < window.innerHeight + 300 && rect.bottom > -80;
+}
+
 /**
- * Scroll-in wrapper. Fades + slides up (y:40->0) once on enter.
- * Reduced motion is handled globally in CSS + Framer reads the same media query,
- * so transformed content still ends visible.
+ * Scroll-in wrapper. Fades + slides up once when entering view.
+ * Also reveals on first paint if the block is already on screen (fixes inner-page gaps).
  */
 export function Reveal({ children, className, stagger, blur, delay = 0, as = "div" }: Props) {
-  const MotionTag = motion[as] as typeof motion.div;
+  const reduce = useReducedMotion();
+  const ref = useRef<HTMLElement>(null);
+  const inView = useInView(ref as RefObject<Element>, VIEWPORT);
+  const [nearOnLoad, setNearOnLoad] = useState(false);
+
+  useEffect(() => {
+    if (reduce) return;
+    const el = ref.current;
+    if (!el) return;
+
+    const check = () => {
+      if (isNearViewport(el)) setNearOnLoad(true);
+    };
+
+    check();
+    // Re-check after route transition / layout settle.
+    const id = window.setTimeout(check, 80);
+    return () => window.clearTimeout(id);
+  }, [reduce]);
+
+  const show = reduce || inView || nearOnLoad;
   const variants: Variants = stagger ? staggerContainer : blur ? fadeUpBlur : fadeUp;
+
+  if (reduce) {
+    const Tag = as;
+    return <Tag className={className}>{children}</Tag>;
+  }
+
+  const MotionTag = motion[as] as typeof motion.div;
 
   return (
     <MotionTag
+      ref={ref as React.RefObject<HTMLDivElement>}
       className={className}
       variants={variants}
       initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.2 }}
+      animate={show ? "visible" : "hidden"}
       transition={stagger ? undefined : { delay }}
     >
       {children}

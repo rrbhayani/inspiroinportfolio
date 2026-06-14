@@ -1,0 +1,286 @@
+---
+description: INSPIROIN company portfolio — project purpose, structure, and conventions
+alwaysApply: true
+---
+
+# INSPIROIN Portfolio — Project Knowledge
+
+> **Maintenance:** This file is the single source of project truth. Agents must keep it updated whenever the codebase changes — see `.cursor/rules/sync-project-knowledge.mdc` (always applied; no user prompt needed).
+
+## What This Project Is
+
+Marketing website for **INSPIROIN** — Shopify + custom web agency (Bengaluru, India).
+
+**Two pillars (always balance both in copy):**
+1. **Shopify** — store builds, apps, themes, Plus, migrations, store management
+2. **Custom websites** — fully bespoke sites with **own admin panel**, backend, portals (NOT Shopify)
+
+**Contact:** support@inspiroin.com · Monday to Saturday, 10AM – 7PM IST · Bengaluru, Karnataka, India
+
+**Live URL (metadata):** https://inspiroin.com
+
+---
+
+## Tech Stack
+
+| Layer | Choice |
+|-------|--------|
+| Framework | Next.js **16.2.9** (App Router) |
+| UI | React **19.2.7**, TypeScript **5.5** |
+| Styling | Tailwind CSS **3.4**, CSS variables in `app/globals.css` |
+| Motion | Framer Motion **11.3**, GSAP **3.15** + ScrollTrigger |
+| Scroll | Lenis **1.1** smooth scroll (via `SmoothScroll.tsx`) |
+| Email | nodemailer **8** — Brevo SMTP for contact form |
+
+**Fonts:** Space Grotesk (display), Inter (body), JetBrains Mono (mono) — loaded in `app/layout.tsx`.
+
+**NOT used:** Polaris React, Shopify embedded admin UI, Tailwind-only external UI libs, Redux, Formik.
+
+---
+
+## Local Development
+
+```bash
+npm run dev    # start dev server (Node 18+)
+npm run build  # production build — see Build rule below
+npm run start  # serve production build
+npm run lint   # ESLint
+```
+
+---
+
+## Routes
+
+| Path | Purpose |
+|------|---------|
+| `/` | Home — full marketing page with all sections |
+| `/services` | Service catalog grid (6 services) |
+| `/services/[slug]` | Service detail page |
+| `/solutions` | Shopify + Custom Web solution pillars |
+| `/work` | **Projects we've done** — live client references grid |
+| `/work/[slug]` | Project detail + "Visit live site" external link |
+| `/about` | Company story, values, stats |
+| `/contact` | Contact form → POST `/api/contact` (Brevo SMTP) |
+| `/privacy` | Privacy Policy |
+| `/terms` | Terms of Use |
+| `/products`, `/careers`, `/packages` | Redirects (see below) |
+
+**Redirects** (`next.config.mjs`):
+- `/products` → `/services`
+- `/careers` → `/contact`
+- `/case-studies` → `/work` (legacy)
+- `/case-studies/:slug` → `/work/:slug` (legacy)
+- `/packages` → `/services`
+
+**SEO:** `app/sitemap.ts`, `app/robots.ts`
+
+---
+
+## Navigation
+
+**Header nav** (`lib/site.ts` → `nav`, extended in `Navbar.tsx`):
+- Services (dropdown → all `/services/[slug]`)
+- Projects → `/work`
+- About → `/about`
+- **Contact** — CTA button only (not in main nav links), goes to `/contact`
+
+**Footer:** Projects, About, Solutions, Get In Touch + service links + Privacy / Terms.
+
+**Removed from nav:** Careers, Products, Case Studies (merged into Projects).
+
+---
+
+## Content Files
+
+| File | Purpose |
+|------|---------|
+| `lib/site.ts` | Brand, nav, **hero**, stats, solutions, industries (with HD images), clients, tools, whyChoose, aiAutomation |
+| `lib/services.ts` | 6 services + `getService()` + `subServiceIntros` |
+| `lib/projects.ts` | Client portfolio — `projects[]` with `engagement` (Built / Built & managed), `getProject()`, `featuredProjects` |
+| `lib/testimonials.ts` | **Empty** — add only verified client quotes with permission |
+| `lib/about.ts` | About page copy + team blurb |
+| `lib/legal.ts` | Privacy Policy + Terms of Use content |
+| `lib/products.ts` | Legacy product data (redirects to services) |
+| `lib/motion.ts` | Framer Motion variants / easing |
+| `lib/mail.ts` | Brevo SMTP via nodemailer — `sendContactEmail()` |
+| `lib/gsap.ts` | GSAP + ScrollTrigger registration |
+
+---
+
+## Services (6 slugs)
+
+1. `shopify` — Shopify Development
+2. `custom-website-development` — Custom Website & Admin Panel
+3. `shopify-store-management` — Shopify Store Management
+4. `custom-shopify-solutions` — Custom Shopify Solutions
+5. `ecommerce-website-development` — E-Commerce Website Development
+6. `website-management-support` — Website Management & Support
+
+---
+
+## Client Projects (`lib/projects.ts`)
+
+Add new live sites by appending to `projects[]`. Each entry needs: `slug`, `featured`, `client`, `title`, `summary`, `url`, `category` (`Shopify` | `Custom Web` | `Both`), `industry`, `region`, `services`, `results`, `challenge`, `solution`, `deliverables`, `tint`.
+
+**Current projects (6):**
+
+| Slug | Client | URL | Category |
+|------|--------|-----|----------|
+| `ink9-shop` | Ink9 Shop | https://ink9shop.com/ | Shopify |
+| `getskinwise` | Skinwise | https://getskinwise.com/ | Shopify |
+| `ondoroma` | ONDO Jewels | https://ondoroma.it/ | Shopify |
+| `zweineunneun` | zweineunneun | https://www.zweineunneun.com/en | Shopify |
+| `rentel-marketplace` | Rentel | https://www.rentel.in/ | Custom Web |
+| `vibrant-machinery` | Vibrant Machinery | https://www.vibrantmachinery.in/ | Custom Web |
+
+**Featured on homepage** (`featured: true`): all 6 projects
+
+**Stats** (`lib/site.ts` → `stats[]`): honest counts — 6+ live projects, 4 Shopify, 2 custom, 4+ countries. Hero floating card matches.
+
+**Clients marquee** (`clients[]`): real portfolio names (Ink9 Shop, Skinwise, ONDO, etc.) — logos TBD.
+
+**UI:** `ProjectCard` — "Visit live site" (external) + "Project details" → `/work/[slug]`
+**Button:** supports `external` prop for live URLs; variants: `primary`, `secondary`, `ghost`
+
+---
+
+## Home Page Sections (order in `app/page.tsx`)
+
+1. `HeroAuth` — full viewport hero (`100dvh`), copy + image from `hero` in `lib/site.ts`, image `/images/hero-inspiroin.png`
+2. `SolutionsSection` — Shopify + Custom Web pillars
+3. `WorkPreviewSection` — featured projects ("Projects we've done")
+4. `WorkforceSection` — store management messaging
+5. `CustomWebSection` — custom website + admin panel emphasis
+6. `AIAutomationSection` — AI automation (`aiAutomation` in `lib/site.ts`)
+7. `ServicesSection` — sticky-stacking service cards
+8. `ApproachSection` — process steps
+9. `IndustriesSection` — horizontal scroll cards with HD local images
+10. `ClientsSection`
+11. `ToolsSection`
+12. `PartnershipSection` — stats + why choose INSPIROIN
+
+**BgShift** on home shifts `#bg-layer` color between sections on scroll.
+
+**No FinalCTA** — bottom "let's build it" section was removed from all pages (including home).
+
+---
+
+## Industries Section
+
+8 industries in `lib/site.ts` → `industries[]` with `name`, `image`, `alt`.
+
+**HD images (local):** `public/images/industries/`
+- `ecommerce.jpg`, `fashion.jpg`, `startups.jpg`, `b2b-wholesale.jpg`
+- `health-wellness.jpg`, `professional-services.jpg`, `food-beverage.jpg`, `technology.jpg`
+
+Rendered in `IndustriesSection.tsx` via `next/image` (`quality={92}`), full-bleed cards with gradient overlay.
+
+---
+
+## Global Layout (`app/layout.tsx`)
+
+Always present:
+- `#bg-layer` — fixed background canvas
+- `SmoothScroll` — Lenis instance; export `getLenis()` for scroll-to-top
+- `ScrollRefresh` — ScrollTrigger refresh on route change
+- `ScrollProgress` — thin top progress bar
+- `ScrollProgressButton` — floating bottom-right circular progress + scroll-to-top (appears after ~280px scroll)
+- `ScrollAmbience` — parallax gradient orbs on scroll
+- `useScrollDirection` — scroll up/down detection (progress bar pulse; navbar stays sticky)
+- `Navbar`, `PageTransition`, `Footer`
+
+---
+
+## Key Components
+
+**Layout / UI:** `Navbar`, `Footer`, `Logo`, `Button`, `Icon`, `PageHeader`, `SectionHeading`, `ContactForm`, `ServiceCard`, `ProjectCard`
+
+**Sections:** `components/sections/*` — page blocks listed above
+
+**Animation:** `components/anim/*`
+- `BgShift`, `HorizontalScroll`, `StickyStack`, `Parallax`, `ClipImage`, `RevealText`
+
+**Scroll / reveal:**
+- `Reveal` / `RevealItem` — scroll-in animations; **fixes blank content on load** via `isNearViewport` check + generous viewport margin
+- `StatCounter` — count-up on view
+
+---
+
+## Contact Form & Email
+
+**Flow:** `ContactForm.tsx` → `POST /api/contact` (`app/api/contact/route.ts`) → `lib/mail.ts` → Brevo SMTP.
+
+**Delivery:** submissions go to `MAIL_TO` (default `support@inspiroin.com`). Reply-To is the visitor's email.
+
+**Env vars** (copy `.env.example` → `.env.local`, never commit):
+- `SMTP_HOST` — `smtp-relay.brevo.com`
+- `SMTP_PORT` — `587`
+- `SMTP_USER` — Brevo SMTP login (e.g. `...@smtp-brevo.com`)
+- `SMTP_PASS` — Brevo SMTP key
+- `MAIL_TO` — inbox for form submissions
+- `MAIL_FROM` — verified sender in Brevo (must match a verified sender/domain)
+
+**Dependency:** `nodemailer` (install with `npm install --legacy-peer-deps` if peer conflicts).
+
+**Brevo:** verify `MAIL_FROM` domain/sender in Brevo dashboard or sends may fail.
+
+---
+
+## Design System
+
+**CSS tokens** (`app/globals.css`): `--bg`, `--surface`, `--accent` (#4868d1), `--heading`, tints (`--tint-lavender`, etc.)
+
+**Dynamic tint classes:** `bg-${tint}` used in cards — **safelisted** in `tailwind.config.ts`:
+`bg-tint-pink`, `bg-tint-lavender`, `bg-tint-mint`, `bg-tint-sky`
+
+**Images:** `next/image`; remote Unsplash allowed; hero + industries use local `public/images/`
+
+**Easing:** `--ease-signature: cubic-bezier(0.22, 1, 0.36, 1)` / `EASE` in `lib/motion.ts`
+
+**Reduced motion:** Lenis disabled; animations simplified via `useReducedMotion()` throughout.
+
+---
+
+## Messaging Guidelines
+
+- **Always** present Shopify AND custom web — not Shopify-only
+- Emphasize **custom admin panel** and owned platforms for non-Shopify work
+- Projects page = **live client references** with real URLs for prospects
+- AI automation is a **differentiator** — Shopify + custom admin workflows
+- Do not copy content from reference agencies (WebContrive, Identixweb) — structure only
+
+---
+
+## Agent Conventions
+
+1. **Keep this file in sync** — after meaningful code changes, update `project-knowledge.mdc` in the same task (see `sync-project-knowledge.mdc`)
+2. **Minimize scope** — focused diffs; match existing patterns
+3. **Content changes** → edit `lib/*.ts` data files, not hardcode in components
+4. **New project** → append to `lib/projects.ts`; set `featured: true` for homepage
+5. **New service** → append to `lib/services.ts`; auto appears in nav dropdown
+6. **Do not run `npm run build`** unless user explicitly asks
+7. **Do not commit** unless user explicitly asks
+8. **React 19 types:** use `ReactElement` not `JSX.Element` in Icon/component types
+9. **No FinalCTA** — do not re-add the removed bottom CTA block unless asked
+
+---
+
+## Troubleshooting
+
+| Issue | Fix |
+|-------|-----|
+| `framer-motion` vendor chunk error | Delete `.next` folder, restart `npm run dev` |
+| Content invisible until scroll on inner pages | `Reveal.tsx` viewport + mount check (already fixed) |
+| `params` Promise error on detail pages | Next.js 16: `await params` in `/services/[slug]` and `/work/[slug]` |
+
+---
+
+## Reference Site Patterns (structure only)
+
+Agency sites like WebContrive & Identixweb typically include: Work/Projects, Services, Testimonials, About, Stats, Industries, Process, Contact CTA. Packages page removed — scope is covered under **Services** + **Contact**.
+
+---
+
+## Build
+
+Do **not** run `npm run build` unless the user explicitly asks — they build manually before going live.

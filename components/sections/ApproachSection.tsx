@@ -9,10 +9,10 @@ import { useIsoLayoutEffect } from "@/lib/useIsoLayoutEffect";
 import { EASE } from "@/lib/motion";
 
 const steps = [
-  { n: "01", title: "Discover", body: "We pressure-test goals, map constraints, and define what success looks like before building anything.", tint: "tint-sky" },
-  { n: "02", title: "Design", body: "Flows, prototypes, and a system. We make the hard decisions visible and early — for people and process.", tint: "tint-lavender" },
-  { n: "03", title: "Build", body: "Production-grade engineering in tight sprints, with previews you can use from the first week.", tint: "tint-mint" },
-  { n: "04", title: "Deploy", body: "Ship, instrument, and harden. We hand over docs, training, and a roadmap for what's next.", tint: "tint-pink" },
+  { n: "01", title: "Discover", body: "We map your goals — Shopify store, custom website, admin needs, or both — before proposing anything.", tint: "tint-sky" },
+  { n: "02", title: "Design", body: "Store UX, theme direction, admin panel flows, and integrations planned early and visibly.", tint: "tint-lavender" },
+  { n: "03", title: "Build", body: "Shopify customization or full custom web development in focused sprints with visible progress.", tint: "tint-mint" },
+  { n: "04", title: "Launch & Support", body: "Go live, hand over admin access, and stay supported with management and improvements.", tint: "tint-pink" },
 ];
 
 export function ApproachSection() {

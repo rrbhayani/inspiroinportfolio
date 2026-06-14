@@ -7,13 +7,13 @@ import { services } from "@/lib/services";
 
 export function ServicesSection() {
   return (
-    <section className="bg-surface py-24 md:py-32" aria-label="Digital solutions">
+    <section className="bg-surface py-24 md:py-32" aria-label="Our services">
       <div className="mx-auto max-w-content px-[var(--gutter)]">
         <div className="mb-14 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <SectionHeading
-            eyebrow="Digital Solutions"
-            title="Technology built to scale, secure, and evolve"
-            subtitle="We design, build, and manage digital systems that help organizations operate efficiently today and adapt confidently for what's next."
+            eyebrow="Our Services"
+            title="Shopify & custom web services"
+            subtitle="Shopify stores, custom websites with admin panels, store management, and long-term support — one team covers both sides of your digital presence."
           />
           <Button href="/services" variant="ghost" withArrow>
             All services

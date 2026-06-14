@@ -5,23 +5,24 @@ import { PageHeader } from "@/components/PageHeader";
 import { Reveal, RevealItem } from "@/components/Reveal";
 import { Button } from "@/components/Button";
 import { Icon } from "@/components/Icon";
-import { FinalCTA } from "@/components/sections/FinalCTA";
-import { services, getService } from "@/lib/services";
+import { services, getService, subServiceIntros } from "@/lib/services";
 
-type Params = { params: { slug: string } };
+type Params = { params: Promise<{ slug: string }> };
 
 export function generateStaticParams() {
   return services.map((s) => ({ slug: s.slug }));
 }
 
-export function generateMetadata({ params }: Params): Metadata {
-  const service = getService(params.slug);
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
+  const { slug } = await params;
+  const service = getService(slug);
   if (!service) return { title: "Service not found" };
   return { title: service.title, description: service.summary };
 }
 
-export default function ServiceDetailPage({ params }: Params) {
-  const service = getService(params.slug);
+export default async function ServiceDetailPage({ params }: Params) {
+  const { slug } = await params;
+  const service = getService(slug);
   if (!service) notFound();
 
   const idx = services.findIndex((s) => s.slug === service.slug);
@@ -94,8 +95,8 @@ export default function ServiceDetailPage({ params }: Params) {
               <span className="eyebrow">What we offer</span>
               <h2 className="mt-3 text-h2 font-extrabold">{service.title} services</h2>
               <p className="mt-4 text-lg leading-relaxed text-text-muted">
-                Everything you need across the Shopify platform — pick a starting point or let us
-                scope the full build.
+                {subServiceIntros[service.slug] ??
+                  "Specialized capabilities within this service — scoped to your project."}
               </p>
             </div>
 
@@ -137,7 +138,6 @@ export default function ServiceDetailPage({ params }: Params) {
         </div>
       </section>
 
-      <FinalCTA />
     </>
   );
 }

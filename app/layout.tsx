@@ -7,6 +7,8 @@ import { Footer } from "@/components/Footer";
 import SmoothScroll from "@/components/SmoothScroll";
 import { PageTransition } from "@/components/PageTransition";
 import { ScrollProgress } from "@/components/ScrollProgress";
+import { ScrollProgressButton } from "@/components/ScrollProgressButton";
+import { ScrollAmbience } from "@/components/ScrollAmbience";
 import { ScrollRefresh } from "@/components/ScrollRefresh";
 
 const spaceGrotesk = Space_Grotesk({
@@ -29,14 +31,15 @@ export const metadata: Metadata = {
   },
   description: site.description,
   keywords: [
-    "workforce solutions",
-    "talent solutions",
-    "background verification",
-    "BGV",
-    "digital solutions",
-    "web app development",
-    "managed IT",
-    "staffing",
+    "Shopify development",
+    "Shopify store management",
+    "custom website development",
+    "custom admin panel",
+    "custom web application",
+    "Shopify Plus",
+    "e-commerce development",
+    "website management",
+    "INSPIROIN",
   ],
   openGraph: {
     type: "website",
@@ -44,11 +47,20 @@ export const metadata: Metadata = {
     description: site.description,
     url: site.url,
     siteName: site.name,
+    images: [
+      {
+        url: "/images/hero-inspiroin.png",
+        width: 1200,
+        height: 630,
+        alt: "INSPIROIN — Shopify and custom web development",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: `${site.name} — ${site.tagline}`,
     description: site.description,
+    images: ["/images/hero-inspiroin.png"],
   },
   robots: { index: true, follow: true },
 };
@@ -62,9 +74,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="antialiased">
         {/* Fixed canvas layer whose color is shifted between sections on scroll. */}
         <div id="bg-layer" aria-hidden="true" className="pointer-events-none fixed inset-0 -z-50" />
+        <ScrollAmbience />
         <SmoothScroll />
         <ScrollRefresh />
         <ScrollProgress />
+        <ScrollProgressButton />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-accent focus:px-4 focus:py-2 focus:text-sm focus:text-white"

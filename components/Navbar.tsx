@@ -8,7 +8,8 @@ import { Logo } from "./Logo";
 import { Icon } from "./Icon";
 import { EASE } from "@/lib/motion";
 import { services } from "@/lib/services";
-import { products } from "@/lib/products";
+import { nav } from "@/lib/site";
+import { scrollToTop } from "@/lib/scrollToTop";
 
 type NavItem = {
   label: string;
@@ -18,20 +19,11 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   {
-    label: "Products",
-    href: "/products",
-    menu: [
-      ...products.map((p) => ({ label: p.name, href: "/products", hint: p.tagline })),
-      { label: "All products", href: "/products" },
-    ],
-  },
-  {
     label: "Services",
     href: "/services",
     menu: services.map((s) => ({ label: s.title, href: `/services/${s.slug}`, hint: s.value })),
   },
-  { label: "Solutions", href: "/solutions" },
-  { label: "Careers", href: "/careers" },
+  ...nav.filter((item) => item.label !== "Services" && item.label !== "Contact").map((item) => ({ ...item })),
 ];
 
 export function Navbar() {
@@ -48,7 +40,7 @@ export function Navbar() {
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 16);
-      setPastHero(window.scrollY > window.innerHeight * 0.7);
+      setPastHero(window.scrollY > window.innerHeight * 0.92);
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -73,17 +65,32 @@ export function Navbar() {
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
+  function onNavClick() {
+    scrollToTop({ immediate: true });
+    setOpen(false);
+    setOpenMenu(null);
+  }
+
   const shell = overlay
-    ? `${scrolled ? "py-2.5" : "py-3"} border-white/15 bg-white/[0.08] text-white shadow-[0_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-xl ${scrolled ? "bg-white/[0.12] border-white/25" : ""}`
+    ? `${scrolled ? "py-2.5" : "py-3"} border-white/15 bg-white/[0.08] text-white shadow-[0_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-xl ${scrolled ? "bg-white/[0.14] border-white/30" : ""}`
     : scrolled
-      ? "my-2 border-border bg-surface/80 py-2.5 shadow-soft backdrop-blur-xl"
-      : "my-0 border-transparent py-5";
+      ? "border-border bg-surface/95 py-2.5 shadow-soft backdrop-blur-xl"
+      : "border-transparent bg-transparent py-5";
 
   return (
     <header className="fixed inset-x-0 top-0 z-50">
+      {/* Full-width sticky backdrop when scrolled */}
       <div
-        className={`mx-auto flex max-w-content items-center justify-between gap-6 rounded-full border px-[var(--gutter)] transition-all duration-[400ms] ease-signature ${
-          overlay ? "my-3" : ""
+        aria-hidden="true"
+        className={`pointer-events-none absolute inset-x-0 top-0 border-b transition-all duration-[400ms] ease-signature ${
+          scrolled
+            ? "h-full border-border/70 bg-surface/85 opacity-100 shadow-[0_4px_24px_-4px_rgba(14,32,74,0.08)] backdrop-blur-xl"
+            : "h-full border-transparent bg-transparent opacity-0"
+        } ${overlay && scrolled ? "!border-white/10 !bg-[#0A1633]/75 !shadow-[0_8px_32px_-8px_rgba(0,0,0,0.45)]" : ""}`}
+      />
+      <div
+        className={`relative mx-auto flex max-w-content items-center justify-between gap-6 rounded-full border px-[var(--gutter)] transition-all duration-[400ms] ease-signature ${
+          overlay ? (scrolled ? "my-2" : "my-3") : scrolled ? "my-2" : "my-0"
         } ${shell}`}
       >
         <Logo light={overlay} />
@@ -101,6 +108,7 @@ export function Navbar() {
                 <Link
                   href={item.href}
                   aria-expanded={openMenu === item.label}
+                  onClick={onNavClick}
                   className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-colors duration-300 ${
                     overlay
                       ? "text-white/80 hover:text-white"
@@ -133,6 +141,7 @@ export function Navbar() {
                           <Link
                             key={sub.label + sub.href}
                             href={sub.href}
+                            onClick={onNavClick}
                             className="block rounded-xl px-4 py-3 transition-colors hover:bg-surface-2"
                           >
                             <span className="block text-sm font-semibold text-heading">{sub.label}</span>
@@ -152,6 +161,7 @@ export function Navbar() {
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={onNavClick}
                 className={`relative rounded-full px-4 py-2 text-sm font-medium transition-colors duration-300 ${
                   overlay
                     ? "text-white/80 hover:text-white"
@@ -178,6 +188,7 @@ export function Navbar() {
           {overlay ? (
             <Link
               href="/contact"
+              onClick={onNavClick}
               className="rounded-full border border-white/30 px-5 py-2.5 text-sm font-semibold text-white transition-all duration-[400ms] ease-signature hover:-translate-y-0.5 hover:bg-white hover:text-[#0A1633]"
             >
               Get In Touch
@@ -185,6 +196,7 @@ export function Navbar() {
           ) : (
             <Link
               href="/contact"
+              onClick={onNavClick}
               className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-white shadow-soft transition-all duration-[400ms] ease-signature hover:-translate-y-0.5 hover:shadow-glow"
             >
               Get In Touch
@@ -240,6 +252,7 @@ export function Navbar() {
                   <li key={item.href} className="border-b border-border py-3">
                     <Link
                       href={item.href}
+                      onClick={onNavClick}
                       className={`flex items-center justify-between text-lg font-semibold ${
                         isActive(item.href) ? "text-accent" : "text-heading"
                       }`}
@@ -253,6 +266,7 @@ export function Navbar() {
                           <li key={sub.label + sub.href}>
                             <Link
                               href={sub.href}
+                              onClick={onNavClick}
                               className="block py-1.5 text-sm text-text-muted transition-colors hover:text-heading"
                             >
                               {sub.label}
@@ -266,6 +280,7 @@ export function Navbar() {
               </ul>
               <Link
                 href="/contact"
+                onClick={onNavClick}
                 className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-semibold text-white"
               >
                 Get In Touch

@@ -3,16 +3,17 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { ScrollTrigger } from "@/lib/gsap";
+import { scrollToTop } from "@/lib/scrollToTop";
 
 /**
- * On route change: kill any leftover ScrollTriggers from the previous page and
- * refresh measurements after the new page paints. Prevents leaks and stale pins.
+ * On route change: scroll to top, kill stale ScrollTriggers, refresh measurements.
  */
 export function ScrollRefresh() {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Let the new route render + page-transition settle, then re-measure.
+    scrollToTop({ immediate: true });
+
     const id = window.setTimeout(() => ScrollTrigger.refresh(), 200);
     return () => {
       window.clearTimeout(id);

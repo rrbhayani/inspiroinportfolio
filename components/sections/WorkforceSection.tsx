@@ -3,35 +3,34 @@ import { Button } from "@/components/Button";
 import { Icon } from "@/components/Icon";
 
 const points = [
-  { title: "Access to talent", body: "The right people in place, ready to perform across roles and locations." },
-  { title: "Workforce readiness", body: "Continuous skill development that scales with business needs." },
-  { title: "Performance-ready teams", body: "Built, enabled, and sustained for high performance." },
+  { title: "Catalog & merchandising", body: "Products, collections, and promotions kept accurate across every store." },
+  { title: "Operations & fulfillment", body: "Order flows, app health, and day-to-day store tasks handled reliably." },
+  { title: "Performance & reporting", body: "Regular health checks and clear summaries so you always know where you stand." },
 ];
 
 export function WorkforceSection() {
   return (
-    <section className="py-24 md:py-32" aria-label="Workforce solutions">
+    <section className="py-24 md:py-32" aria-label="Store management">
       <div className="mx-auto grid max-w-content items-center gap-14 px-[var(--gutter)] lg:grid-cols-2">
         <Reveal className="flex flex-col gap-6">
-          <span className="eyebrow">Workforce Solutions</span>
-          <h2 className="text-h2 font-extrabold">People capability, built end to end</h2>
+          <span className="eyebrow">Store Management</span>
+          <h2 className="text-h2 font-extrabold">Your stores, managed end to end</h2>
           <p className="text-lg leading-relaxed text-text-muted">
-            We help organizations build, enable, and sustain high-performing teams by combining
-            workforce readiness with continuous skill development designed to scale with business
-            needs.
+            We manage Shopify stores day to day — one store or many. Catalog updates, operations,
+            integrations, and performance monitoring so your team can focus on growth, not upkeep.
           </p>
           <div>
-            <Button href="/solutions" withArrow>
+            <Button href="/services/shopify-store-management" withArrow>
               Learn more
             </Button>
           </div>
         </Reveal>
 
         <Reveal stagger className="flex flex-col gap-4">
-          <RevealItem className="rounded-card border border-border bg-tint-sky p-6">
-            <span className="eyebrow text-text-muted">Talent Solutions at Scale</span>
+          <RevealItem className="rounded-card border border-border bg-tint-lavender p-6">
+            <span className="eyebrow text-text-muted">Multi-store ready</span>
             <p className="mt-3 text-base font-semibold text-heading">
-              Ensuring the right people are in place, ready to perform.
+              Consistent management across brands, regions, and wholesale channels.
             </p>
           </RevealItem>
           {points.map((p) => (

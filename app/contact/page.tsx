@@ -8,13 +8,13 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Get In Touch",
   description:
-    "Talk to INSPIROIN about talent solutions, digital solutions, or our products. We'll reply within one business day.",
+    "Contact INSPIROIN about Shopify development, store management, custom websites with admin panels, or ongoing web support.",
 };
 
 const contactItems: { icon: IconName; label: string; value: string; href?: string }[] = [
   { icon: "spark", label: "Email", value: site.email, href: `mailto:${site.email}` },
   { icon: "support", label: "Hours", value: site.hours },
-  { icon: "building", label: "Location", value: site.location },
+  { icon: "building", label: "Location", value: site.address },
 ];
 
 export default function ContactPage() {
@@ -22,13 +22,12 @@ export default function ContactPage() {
     <>
       <PageHeader
         eyebrow="Get In Touch"
-        title="Let's build what your workforce needs next"
-        lede="Whether you're scaling teams, improving processes, or exploring better systems — tell us where you're headed. We'll reply within one business day."
+        title="Shopify project or custom website — let's talk"
+        lede="Tell us about your Shopify store, custom website with admin panel, multi-store management needs, or ongoing support. Not sure where to start? Many projects blend Shopify and custom web — describe your goals and we'll recommend the right scope. We'll reply within one business day."
       />
 
       <section className="pb-24 md:pb-32">
         <div className="mx-auto grid max-w-content gap-14 px-[var(--gutter)] lg:grid-cols-[1fr_1.2fr]">
-          {/* Sidebar */}
           <Reveal className="flex flex-col gap-8">
             <div className="flex flex-col gap-4">
               {contactItems.map((c) => {
@@ -64,8 +63,8 @@ export default function ContactPage() {
               <ol className="mt-4 flex flex-col gap-4">
                 {[
                   "We read your message and reply within a business day.",
-                  "A short call to understand scope and goals.",
-                  "A clear plan, timeline, and honest next steps.",
+                  "A short call to understand your Shopify or custom web requirements.",
+                  "A clear scope, timeline, and honest next steps.",
                 ].map((s, i) => (
                   <li key={i} className="flex gap-3 text-sm leading-relaxed text-text">
                     <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-surface font-mono text-xs text-accent">
@@ -78,7 +77,6 @@ export default function ContactPage() {
             </div>
           </Reveal>
 
-          {/* Form */}
           <Reveal delay={0.1} className="rounded-card border border-border bg-surface p-7 shadow-card md:p-10">
             <ContactForm />
           </Reveal>

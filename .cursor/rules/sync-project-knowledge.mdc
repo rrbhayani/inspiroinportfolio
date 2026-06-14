@@ -1,0 +1,48 @@
+---
+description: Keep .cursor/rules/project-knowledge.mdc in sync whenever the codebase changes — do not wait for the user to ask
+alwaysApply: true
+---
+
+# Sync Project Knowledge (mandatory)
+
+When you **add, remove, rename, or meaningfully change** project files, **update `.cursor/rules/project-knowledge.mdc` in the same task** before finishing. The user should never have to ask for a knowledge update.
+
+## When to update
+
+Update `project-knowledge.mdc` if you change any of:
+
+| Change type | Update these sections |
+|-------------|----------------------|
+| New/removed/renamed route in `app/` | Routes, Home Page Sections (if home), Navigation |
+| Redirect in `next.config.mjs` | Routes → Redirects |
+| Nav/footer links in `lib/site.ts`, `Navbar.tsx`, `Footer.tsx` | Navigation |
+| Content in `lib/*.ts` (services, projects, testimonials, about, site) | Content Files + matching detail section (Services, Client Projects, Industries, etc.) |
+| New/removed homepage section | Home Page Sections |
+| New/removed global component in `layout.tsx` | Global Layout, Key Components |
+| New client project in `lib/projects.ts` | Client Projects table |
+| Dependencies in `package.json` | Tech Stack |
+| New `public/images/` assets used by the site | Public assets / Industries / Hero as relevant |
+| Agent conventions (build rule, patterns, removed features) | Agent Conventions, Build, Troubleshooting |
+| Design tokens, safelist, fonts | Design System |
+
+## When you can skip
+
+- Pure formatting or typo fixes with **no** behavior, route, content, or structure change
+- Changes only inside `project-knowledge.mdc` itself
+
+## How to update
+
+1. Edit `project-knowledge.mdc` **after** the code change, in the **same response/task**.
+2. Keep entries **accurate and concise** — lists and tables, not full file dumps.
+3. Remove stale info (deleted routes, removed components, old names like "Case Studies" if merged).
+4. Bump version numbers in Tech Stack when `package.json` changes.
+5. Do **not** create separate markdown docs — only maintain `project-knowledge.mdc`.
+
+## Examples
+
+- Added project to `lib/projects.ts` → add row to **Client Projects** table; set featured note if needed.
+- Removed `FinalCTA` → note under **Agent Conventions** / Home Page that it stays removed.
+- Renamed nav item → update **Navigation** and **Content Files** if labels/paths changed.
+- Added `ScrollProgressButton` → document under **Global Layout**.
+
+**If unsure whether a change matters, update the knowledge file anyway.**

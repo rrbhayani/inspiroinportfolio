@@ -3,8 +3,8 @@ import { PageHeader } from "@/components/PageHeader";
 import { Reveal, RevealItem } from "@/components/Reveal";
 import { Button } from "@/components/Button";
 import { Icon } from "@/components/Icon";
-import { FinalCTA } from "@/components/sections/FinalCTA";
 import { WorkforceSection } from "@/components/sections/WorkforceSection";
+import { CustomWebSection } from "@/components/sections/CustomWebSection";
 import { IndustriesSection } from "@/components/sections/IndustriesSection";
 import { solutions } from "@/lib/site";
 import { services } from "@/lib/services";
@@ -12,7 +12,7 @@ import { services } from "@/lib/services";
 export const metadata: Metadata = {
   title: "Solutions",
   description:
-    "Talent and digital solutions from INSPIROIN — workforce readiness at scale and technology that connects people, processes, and performance.",
+    "Shopify solutions and custom website solutions from INSPIROIN — store development, store management, custom admin panels, and full web platform support.",
 };
 
 export default function SolutionsPage() {
@@ -20,8 +20,8 @@ export default function SolutionsPage() {
     <>
       <PageHeader
         eyebrow="Our Solutions"
-        title="Solutions designed around real workflows"
-        lede="Our solutions support how teams learn, collaborate, and perform — without adding unnecessary complexity."
+        title="Shopify commerce and custom websites — two strengths, one team"
+        lede="We build and manage Shopify stores, and we build fully custom websites with admin panels and backends. Choose the path that fits your business — or combine both."
       />
 
       <section className="pb-8">
@@ -41,11 +41,17 @@ export default function SolutionsPage() {
                   <p className="text-sm leading-relaxed text-text-muted">{s.body}</p>
                   <div className="mt-auto pt-2">
                     <Button
-                      href={s.slug === "digital-solutions" ? "/services" : "/contact"}
+                      href={
+                        s.slug === "shopify-solutions"
+                          ? "/services/shopify"
+                          : "/services/custom-website-development"
+                      }
                       variant="ghost"
                       withArrow
                     >
-                      {s.slug === "digital-solutions" ? "Explore services" : "Talk to us"}
+                      {s.slug === "shopify-solutions"
+                        ? "Explore Shopify services"
+                        : "Explore custom web services"}
                     </Button>
                   </div>
                 </div>
@@ -53,9 +59,8 @@ export default function SolutionsPage() {
             ))}
           </Reveal>
 
-          {/* Digital service areas quick list */}
           <Reveal className="mt-10 rounded-card border border-border bg-surface p-8 shadow-card">
-            <span className="eyebrow text-text-muted">Digital service areas</span>
+            <span className="eyebrow text-text-muted">All service areas</span>
             <div className="mt-5 flex flex-wrap gap-2">
               {services.map((s) => (
                 <a
@@ -72,8 +77,8 @@ export default function SolutionsPage() {
       </section>
 
       <WorkforceSection />
+      <CustomWebSection />
       <IndustriesSection />
-      <FinalCTA />
     </>
   );
 }

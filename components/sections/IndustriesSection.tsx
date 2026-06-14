@@ -1,9 +1,7 @@
+import Image from "next/image";
 import { SectionHeading } from "@/components/SectionHeading";
-import { Icon } from "@/components/Icon";
 import { HorizontalScroll } from "@/components/anim/HorizontalScroll";
 import { industries } from "@/lib/site";
-
-const tints = ["tint-sky", "tint-lavender", "tint-mint", "tint-pink"];
 
 export function IndustriesSection() {
   return (
@@ -12,27 +10,38 @@ export function IndustriesSection() {
         <SectionHeading
           eyebrow="Industries We Serve"
           title="Experience across diverse industries"
-          subtitle="Our solutions are trusted by organizations across industries where people performance is critical. Scroll across to explore."
+          subtitle="We serve e-commerce brands on Shopify and businesses that need fully custom websites, portals, and admin-driven platforms."
         />
       </div>
 
-      {/* Pinned horizontal scroll on desktop; native swipe row on mobile. */}
       <HorizontalScroll>
-        {industries.map((name, i) => (
-          <div
-            key={name}
-            className={`flex w-[78vw] shrink-0 flex-col justify-between rounded-card border border-border bg-${tints[i % tints.length]} p-8 sm:w-[42vw] md:h-[56vh] md:w-[34vw] lg:w-[26vw]`}
+        {industries.map((industry, i) => (
+          <article
+            key={industry.name}
+            className="group relative w-[78vw] shrink-0 overflow-hidden rounded-card border border-border shadow-card sm:w-[42vw] md:h-[56vh] md:w-[34vw] lg:w-[26vw]"
           >
-            <div className="flex items-center justify-between">
-              <span className="grid h-12 w-12 place-items-center rounded-xl bg-surface text-accent shadow-soft">
-                <Icon name="building" size={22} />
-              </span>
-              <span className="font-mono text-xs text-text-muted">
+            <Image
+              src={industry.image}
+              alt={industry.alt}
+              fill
+              quality={92}
+              priority={i < 2}
+              sizes="(max-width: 640px) 78vw, (max-width: 768px) 42vw, (max-width: 1024px) 34vw, 26vw"
+              className="object-cover object-center transition-transform duration-700 ease-signature group-hover:scale-[1.04]"
+            />
+
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/10"
+            />
+
+            <div className="relative flex h-full min-h-[320px] flex-col justify-between p-8 md:min-h-0">
+              <span className="self-end font-mono text-xs font-medium text-white/70">
                 {String(i + 1).padStart(2, "0")}
               </span>
+              <h3 className="text-2xl font-extrabold leading-tight text-white">{industry.name}</h3>
             </div>
-            <h3 className="mt-8 text-2xl font-extrabold leading-tight text-heading">{name}</h3>
-          </div>
+          </article>
         ))}
       </HorizontalScroll>
     </section>

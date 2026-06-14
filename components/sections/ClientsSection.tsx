@@ -9,11 +9,10 @@ export function ClientsSection() {
         <SectionHeading
           align="center"
           eyebrow="Our Clients"
-          title="Chosen by high-growth teams"
-          subtitle="Helping modern businesses automate operations with speed, clarity, and confidence."
+          title="Clients we've built for"
+          subtitle="Shopify stores and custom web platforms — real brands with live sites in our portfolio."
         />
       </div>
-      {/* PLACEHOLDER wordmarks — replace each with a real <Image> logo. */}
       <Marquee>
         {clients.map((name) => (
           <span

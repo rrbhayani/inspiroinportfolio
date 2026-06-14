@@ -1,4 +1,4 @@
-import type { SVGProps } from "react";
+import type { ReactElement, SVGProps } from "react";
 
 export type IconName =
   | "code"
@@ -27,7 +27,7 @@ export type IconName =
   | "github"
   | "dribbble";
 
-const paths: Record<IconName, JSX.Element> = {
+const paths: Record<IconName, ReactElement> = {
   code: (
     <>
       <path d="m8 8-4 4 4 4" />

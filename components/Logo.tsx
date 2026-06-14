@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { scrollToTop } from "@/lib/scrollToTop";
 
 /**
  * INSPIROIN logo — spark mark (gradient rounded-square tile with a white "i"
@@ -20,6 +23,7 @@ export function Logo({
     <Link
       href="/"
       aria-label="INSPIROIN home"
+      onClick={() => scrollToTop({ immediate: true })}
       className={`group inline-flex items-center gap-2.5 ${className}`}
     >
       <LogoMark className="h-8 w-8 shrink-0" mono={mono} />
