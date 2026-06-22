@@ -1,8 +1,9 @@
 "use client";
 
 import { motion, useReducedMotion, useInView, type Variants } from "framer-motion";
-import { useRef, useEffect, useState, type ReactNode, type RefObject } from "react";
+import { useRef, type ReactNode, type RefObject } from "react";
 import { fadeUp, fadeUpBlur, staggerContainer, staggerItem } from "@/lib/motion";
+import { useRevealOnLoad } from "@/lib/useRevealOnLoad";
 
 /** Generous zone so content just below the fold reveals on page load, not only after scroll. */
 const VIEWPORT = { once: true, amount: 0, margin: "0px 0px 300px 0px" } as const;
@@ -16,11 +17,6 @@ type Props = {
   as?: "div" | "section" | "ul" | "li" | "header";
 };
 
-function isNearViewport(el: HTMLElement) {
-  const rect = el.getBoundingClientRect();
-  return rect.top < window.innerHeight + 300 && rect.bottom > -80;
-}
-
 /**
  * Scroll-in wrapper. Fades + slides up once when entering view.
  * Also reveals on first paint if the block is already on screen (fixes inner-page gaps).
@@ -29,22 +25,7 @@ export function Reveal({ children, className, stagger, blur, delay = 0, as = "di
   const reduce = useReducedMotion();
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref as RefObject<Element>, VIEWPORT);
-  const [nearOnLoad, setNearOnLoad] = useState(false);
-
-  useEffect(() => {
-    if (reduce) return;
-    const el = ref.current;
-    if (!el) return;
-
-    const check = () => {
-      if (isNearViewport(el)) setNearOnLoad(true);
-    };
-
-    check();
-    // Re-check after route transition / layout settle.
-    const id = window.setTimeout(check, 80);
-    return () => window.clearTimeout(id);
-  }, [reduce]);
+  const nearOnLoad = useRevealOnLoad(ref, reduce);
 
   const show = reduce || inView || nearOnLoad;
   const variants: Variants = stagger ? staggerContainer : blur ? fadeUpBlur : fadeUp;

@@ -19,8 +19,12 @@ export function getLenis() {
 export default function SmoothScroll() {
   useEffect(() => {
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReduced) {
-      // No smoothing; make sure any scrubbed triggers still measure correctly.
+    const isMobile =
+      window.matchMedia("(max-width: 767px)").matches ||
+      window.matchMedia("(pointer: coarse)").matches;
+
+    if (prefersReduced || isMobile) {
+      // Native scroll on mobile — Lenis can block first-paint / in-view detection.
       ScrollTrigger.refresh();
       return;
     }

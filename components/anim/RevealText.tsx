@@ -1,8 +1,9 @@
 "use client";
 
 import { motion, useReducedMotion, useInView, type Variants } from "framer-motion";
-import { useRef, useEffect, useState, type ElementType, type RefObject } from "react";
+import { useRef, type ElementType, type RefObject } from "react";
 import { EASE } from "@/lib/motion";
+import { useRevealOnLoad } from "@/lib/useRevealOnLoad";
 
 type Mode = "lines" | "words" | "chars";
 
@@ -56,24 +57,11 @@ export function RevealText({
   const reduce = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref as RefObject<Element>, VIEWPORT);
-  const [nearOnLoad, setNearOnLoad] = useState(false);
+  const nearOnLoad = useRevealOnLoad(ref, reduce);
   const Tag = resolveMotionTag(as);
 
   const units: string[] =
     mode === "lines" ? lines ?? [text] : mode === "words" ? text.split(" ") : Array.from(text);
-
-  useEffect(() => {
-    if (reduce) return;
-    const el = ref.current;
-    if (!el) return;
-    const check = () => {
-      const rect = el.getBoundingClientRect();
-      if (rect.top < window.innerHeight + 200) setNearOnLoad(true);
-    };
-    check();
-    const id = window.setTimeout(check, 80);
-    return () => window.clearTimeout(id);
-  }, [reduce]);
 
   if (reduce) {
     const Plain = (as ?? "div") as ElementType;
