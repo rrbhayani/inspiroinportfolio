@@ -61,7 +61,10 @@ npm run lint   # ESLint
 | `/work/[slug]` | Project detail + "Visit live site" external link |
 | `/about` | Company story, values, stats |
 | `/contact` | Contact form → POST `/api/contact` (Brevo SMTP) |
-| `/privacy` | Privacy Policy |
+| `/privacy` | Privacy Policy — website visitors + links to platform policies |
+| `/privacy/shopify-apps` | **Apps for Shopify Privacy Policy** (App Store listing URL) |
+| `/helpdesk` | Shopify apps helpdesk hub |
+| `/helpdesk/[slug]` | Per-app helpdesk (e.g. `/helpdesk/try-it-on`) |
 | `/terms` | Terms of Use |
 | `/products`, `/careers`, `/packages` | Redirects (see below) |
 
@@ -71,6 +74,7 @@ npm run lint   # ESLint
 - `/case-studies` → `/work` (legacy)
 - `/case-studies/:slug` → `/work/:slug` (legacy)
 - `/packages` → `/services`
+- `/apps-for-shopify-privacy-policy` → `/privacy/shopify-apps` (Identixweb-style App Store URL)
 
 **SEO:** `app/sitemap.ts`, `app/robots.ts`
 
@@ -84,7 +88,7 @@ npm run lint   # ESLint
 - About → `/about`
 - **Contact** — CTA button only (not in main nav links), goes to `/contact`
 
-**Footer:** Projects, About, Solutions, Get In Touch + service links + Privacy / Terms.
+**Footer:** Projects, About, Solutions, Helpdesk, Get In Touch + service links + Privacy / Terms.
 
 **Removed from nav:** Careers, Products, Case Studies (merged into Projects).
 
@@ -99,7 +103,8 @@ npm run lint   # ESLint
 | `lib/projects.ts` | Client portfolio — `projects[]` with `engagement` (Built / Built & managed), `getProject()`, `featuredProjects` |
 | `lib/testimonials.ts` | **Empty** — add only verified client quotes with permission |
 | `lib/about.ts` | About page copy + team blurb |
-| `lib/legal.ts` | Privacy Policy + Terms of Use content |
+| `lib/legal.ts` | Privacy Policy (website + platform links), **Apps for Shopify Privacy Policy**, Terms of Use |
+| `lib/apps.ts` | INSPIROIN Shopify apps — helpdesk FAQs, setup steps, `getShopifyApp()` (Try It On) |
 | `lib/products.ts` | Legacy product data (redirects to services) |
 | `lib/motion.ts` | Framer Motion variants / easing |
 | `lib/mail.ts` | Brevo SMTP via nodemailer — `sendContactEmail()` |
@@ -115,6 +120,16 @@ npm run lint   # ESLint
 4. `custom-shopify-solutions` — Custom Shopify Solutions
 5. `ecommerce-website-development` — E-Commerce Website Development
 6. `website-management-support` — Website Management & Support
+
+---
+
+## Shopify Apps
+
+| Slug | Name | Helpdesk | Privacy |
+|------|------|----------|---------|
+| `try-it-on` | Try It On | `/helpdesk/try-it-on` | `/privacy/shopify-apps` |
+
+Add new apps in `lib/apps.ts` — helpdesk page auto-generates at `/helpdesk/[slug]`. App Store privacy URL: `https://inspiroin.com/privacy/shopify-apps` (also `/apps-for-shopify-privacy-policy` redirect).
 
 ---
 
@@ -193,7 +208,7 @@ Always present:
 
 ## Key Components
 
-**Layout / UI:** `Navbar`, `Footer`, `Logo`, `Button`, `Icon`, `PageHeader`, `SectionHeading`, `ContactForm`, `ServiceCard`, `ProjectCard`
+**Layout / UI:** `Navbar`, `Footer`, `Logo`, `Button`, `Icon`, `PageHeader`, `SectionHeading`, `ContactForm`, `ServiceCard`, `ProjectCard`, `LegalSections`
 
 **Sections:** `components/sections/*` — page blocks listed above
 

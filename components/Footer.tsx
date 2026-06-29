@@ -8,6 +8,7 @@ const companyLinks = [
   { label: "Projects", href: "/work" },
   { label: "About", href: "/about" },
   { label: "Solutions", href: "/solutions" },
+  { label: "Helpdesk", href: "/helpdesk" },
   { label: "Get In Touch", href: "/contact" },
 ];
 

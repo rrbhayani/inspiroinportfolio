@@ -14,6 +14,11 @@ const nextConfig = {
       { source: "/case-studies", destination: "/work", permanent: true },
       { source: "/case-studies/:slug", destination: "/work/:slug", permanent: true },
       { source: "/packages", destination: "/services", permanent: true },
+      {
+        source: "/apps-for-shopify-privacy-policy",
+        destination: "/privacy/shopify-apps",
+        permanent: true,
+      },
     ];
   },
 };

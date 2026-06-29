@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { site } from "@/lib/site";
 import { services } from "@/lib/services";
+import { shopifyApps } from "@/lib/apps";
 import { projects } from "@/lib/projects";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -12,6 +13,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/about",
     "/contact",
     "/privacy",
+    "/privacy/shopify-apps",
+    "/helpdesk",
     "/terms",
   ].map((path) => ({
     url: `${site.url}${path}`,
@@ -31,5 +34,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...routes, ...serviceRoutes, ...projectRoutes];
+  const helpdeskRoutes = shopifyApps.map((app) => ({
+    url: `${site.url}/helpdesk/${app.slug}`,
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }));
+
+  return [...routes, ...serviceRoutes, ...projectRoutes, ...helpdeskRoutes];
 }

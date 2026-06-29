@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHeader } from "@/components/PageHeader";
 import { Reveal } from "@/components/Reveal";
+import { LegalSections } from "@/components/LegalSections";
 import { legal } from "@/lib/legal";
 
 export const metadata: Metadata = {
@@ -23,12 +24,7 @@ export default function TermsPage() {
       <section className="pb-24 md:pb-32">
         <div className="mx-auto max-w-content px-[var(--gutter)]">
           <Reveal className="mx-auto flex max-w-3xl flex-col gap-10">
-            {terms.sections.map((s) => (
-              <div key={s.heading}>
-                <h2 className="text-xl font-bold text-heading">{s.heading}</h2>
-                <p className="mt-3 text-sm leading-relaxed text-text-muted">{s.body}</p>
-              </div>
-            ))}
+            <LegalSections sections={terms.sections} />
             <p className="text-sm text-text-muted">
               Questions?{" "}
               <Link href="/contact" className="font-medium text-accent hover:underline">
